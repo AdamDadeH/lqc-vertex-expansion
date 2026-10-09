@@ -18,20 +18,21 @@ uv run experiments/paramdata_partial_sums.py 18   # ParamData.nb figure (partial
 ```
 src/lqc/vertex.py        vertex expansion: history combinatorics, exact divided differences, the three models
 src/lqc/sflqc.py         exact sLQC amplitudes and matrix elements (a[n](k) polynomials, generating functions)
-src/lqc/timeless.py      group-averaged form with the p-integral by residues; regulated Bianchi I vacuum expansion
-src/lqc/bianchi1.py      Bianchi I Θ recurrence shooting, large-volume asymptotics
+src/lqc/timeless.py      group-averaged form of the scalar-field amplitude with the p-integral by residues
+src/lqc/bianchi1/        Bianchi I: Θ recurrence shooting and asymptotics (spectrum.py), regulated vacuum expansion (vacuum.py)
 src/lqc/renorm.py        toy renormalization flow, Catalan-type closed forms, Gaussian Borel-sum checks
 src/lqc/renormalized.py  decimation (renormalized) vertex expansion with a high-precision residue engine
 tests/                   one test per recorded notebook value; tests/recorded.py holds the recorded values
 experiments/             scripts that compute and write the reports in docs/
-docs/                    the reports: port verification, convergence to order 40, renormalization levels, Bianchi I scan
+docs/                    the reports: port verification, convergence to order 40, renormalization levels
 results/                 exact expansion terms (JSON) behind the reports
-archive/                 the notebooks (zipped), their Markdown digests, and the standalone digest tool
+archive/                 the scalar-field notebooks (zipped), their Markdown digests, and the standalone digest tool
+bianchi1/                everything Bianchi I: its notebooks (zipped), digests, report, experiment (code is src/lqc/bianchi1/)
 ```
 
 ## Notebook → code map
 
-| Notebook(s) (archive/mathematica-notebooks.zip) | What it computes | Entry points |
+| Notebook(s) (archive/mathematica-notebooks.zip, bianchi1/archive/) | What it computes | Entry points |
 |---|---|---|
 | `SFLQC/AutoAmplitude.nb`, `4to4expansion.nb`, `20to36.nb` | vertex expansion of the sLQC amplitude, volumes in steps of 4 | `vertex.sflqc_k_model()` |
 | `SFLQC/ExactAmpFixedPhi2.nb`, `TestingExactFRW.nb` | exact amplitude via a[n](k) polynomials and ∫dk, or via the generating function FId | `sflqc.a_poly`, `sflqc.exact_amplitude_k`, `sflqc.aexact_sym`, `sflqc.aexact_num` |
@@ -39,11 +40,9 @@ archive/                 the notebooks (zipped), their Markdown digests, and the
 | `Group Averaged - Scalar Field/GAvgByResidue.nb` | same expansion as Π OffD/Π(p²−2v²) with the p-integral by residues | `timeless.ga_many_amp`, `timeless.residue_sum`, `timeless.ga_amplitude` |
 | `Deparametrized Model/DeparamAuto3_19.nb`, `DepAutoData.nb` | expansion with numeric √Θ elements (Sqth), Generate2/Generate3 step multisets | `sflqc.sqth_element`, `sflqc.theta_element`, `vertex.generate2/3`, `vertex.deparam_sqth_model()`, `.many_change` |
 | `DeparamAutoAmp.nb` | earlier variant with the polygamma kernel (superseded by DeparamAuto3_19) | `sflqc.dep_int_sym`, `sflqc.dep_diag_sym` (matrix elements only) |
-| `Vacuum/Bianchi1auto327.nb`, `testingtesting.nb`, `Bianchi 1 Spectrum/Bianchi1autoamp.nb` | regulated (±iδ) vacuum expansion with Bianchi I anisotropy phases | `timeless.vac_offd`, `timeless.vac_diag`, `timeless.vac_many_amp`, `timeless.regulated_many_amp` |
-| `Bianchi 1 Spectrum/Recur.nb`, `Recur2.nb`, `Spect` | shooting on the Θ three-term recurrence; the hand-written scan log | `bianchi1.shoot`, `bianchi1.envelope_ratio`, `bianchi1.wkb_asymptotic` |
-| `Bianchi 1 Spectrum/Asymp.nb` | large-volume series of the matrix elements in y = 1/v | `bianchi1.asymp_offd_up/down`, `asymp_diag_up/down` |
-| `RenormSimple.nb`, `Vacuum/VacExp328.nb` | toy renormalization flow x→x²−2, y→y/(1−2/x²); Ap[n] closed forms | `renorm.renorm_flow`, `renorm.renorm_table`, `renorm.Ap`, `renorm.Aapprox`, `renorm.flow_ab` |
-| `Bianchi 1 Spectrum/GaussExpansion.nb`, `GaussExpansion2.nb` | Gaussian integral vs its divergent (Borel-summable) series | `renorm.gauss_exact`, `gauss_exact_regulated`, `gauss_terms`, `gauss_partial_sums` |
+| `RenormSimple.nb`, `Vacuum/VacExp328.nb` (in `bianchi1/`) | toy renormalization flow x→x²−2, y→y/(1−2/x²); Ap[n] closed forms | `renorm.renorm_flow`, `renorm.renorm_table`, `renorm.Ap`, `renorm.Aapprox`, `renorm.flow_ab` |
+| `Bianchi 1 Spectrum/GaussExpansion.nb`, `GaussExpansion2.nb` (in `bianchi1/`) | Gaussian integral vs its divergent (Borel-summable) series | `renorm.gauss_exact`, `gauss_exact_regulated`, `gauss_terms`, `gauss_partial_sums` |
+| Bianchi I notebooks (`Bianchi 1 Spectrum/`, `Vacuum/`) | spectrum shooting, vacuum expansion | see [`bianchi1/README.md`](bianchi1/README.md) |
 
 ## How the vertex expansion is computed
 
@@ -76,8 +75,8 @@ numerically on arrays, `to_json/from_json` store the exact terms.
 * [03 Renormalized expansion](docs/03-renormalized-expansion.md): the notebooks' renormalization flow is
   real-space decimation of the resolvent; applied to the real Θ it accelerates the convergence dramatically
   (levels 1–4), though it stays power-law.
-* [04 Bianchi I spectrum scan](docs/04-bianchi1-spectrum-scan.md): the shooting recurrence behind the
-  hand-written `Spect` log, reproduced.
+* [Bianchi I spectrum scan](bianchi1/docs/spectrum-scan.md): the shooting recurrence behind the
+  hand-written `Spect` log, reproduced (kept with the rest of the Bianchi I material in `bianchi1/`).
 
 ```
 uv run experiments/compute_orders.py sflqc_k 4 4 40          # exact terms -> results/

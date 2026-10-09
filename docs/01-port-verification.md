@@ -21,7 +21,7 @@ runs them in about 10 s.
 * **Bianchi I vacuum**: ManyAmp[14,4,4] = −18.55597294432733 (`Bianchi1auto327.nb`, m1=m2=5, δ=0.01) and the
   4→20 single-history amplitude of `Bianchi1autoamp.nb` (δ=0.001).
 * **Asymp.nb**: all four large-volume series, symbolically.
-* **Spectrum scan**: see report 04.
+* **Spectrum scan**: see `bianchi1/docs/spectrum-scan.md`.
 * **Renormalization toys**: 4/(2π sin 2θ) = 2/π at θ = π/4; the flowed first term converges to 2/π
   (`RenormSimple.nb`); Ap0, Ap[1], Aapprox values, abar/bbar of `VacExp328.nb`; the Gaussian integral, its
   regulated Borel form and all 61 stored terms and partial sums of `GaussExpansion.nb` (1e-12).

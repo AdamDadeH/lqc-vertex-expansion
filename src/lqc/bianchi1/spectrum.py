@@ -6,14 +6,14 @@ Sources
       OffD1n[n] a[n+1] + Diagn[n] a[n] + OffD2n[n] a[n-1] == e a[n]
   with anisotropy parameters p1, p2, started from a[0]=0, a[1]=1 and iterated to large n.
 * Bianchi 1 Spectrum/Spect (text log): the hand-recorded scan of e values and whether the
-  solution is damped / divergent (copied to archive/mathematica-notebooks.zip (Bianchi 1 Spectrum/Spect)).
+  solution is damped / divergent (copied to bianchi1/archive/mathematica-notebooks-bianchi1.zip (Bianchi 1 Spectrum/Spect)).
 * Bianchi 1 Spectrum/Asymp.nb: large-volume expansions of the matrix elements in y = 1/v.
 * Recur2.nb: the WKB-like asymptotic form Re[ x^{-1/2} e^{i Log[x] (-(p1+p2)/3 + sqrt(3e/8 - 4(p1²+p2²-p1 p2))/6)} ].
 """
 from __future__ import annotations
 import numpy as np
 import sympy as sp
-from .timeless import S6
+from .vacuum import S6
 
 
 def _S6np(A, B, p1, p2):

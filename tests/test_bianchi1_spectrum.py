@@ -1,5 +1,5 @@
 import numpy as np, sympy as sp, pytest
-from lqc import bianchi1
+from lqc.bianchi1 import spectrum as bianchi1
 from recorded import REC
 
 
