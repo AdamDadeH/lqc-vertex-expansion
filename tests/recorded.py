@@ -1,4 +1,4 @@
-"""Values recorded in the output cells of the original Mathematica notebooks (archive/mathematica/*.nb).
+"""Values recorded in the output cells of the original Mathematica notebooks (archive/mathematica-notebooks.zip).
 
 Expressions are SymPy-parsable strings (use sympy.sympify); complex numbers are [re, im] pairs.
 Converted once from the notebooks' own InputForm output with the (since removed) migration tooling.

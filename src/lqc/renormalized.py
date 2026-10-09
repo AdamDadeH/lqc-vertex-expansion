@@ -270,13 +270,14 @@ class RenormalizedExpansion:
     def order(self, M: int) -> dict:
         """{Omega (mp): [c_m (mp)]}: A_M(x) = Σ e^{i Omega x} Σ_m c_m (i x)^m."""
         total = {}
-        for occ, count in walk_counts(M, self.jmax).items():
-            for om, cs in residue_terms(count, occ, self.chain, self.roots, self.dps).items():
-                acc = total.setdefault(om, [])
-                if len(acc) < len(cs):
-                    acc += [mp.mpf(0)] * (len(cs) - len(acc))
-                for m, c in enumerate(cs):
-                    acc[m] += c
+        with mp.workdps(self.dps):            # the classes cancel massively; accumulate at full precision
+            for occ, count in walk_counts(M, self.jmax).items():
+                for om, cs in residue_terms(count, occ, self.chain, self.roots, self.dps).items():
+                    acc = total.setdefault(om, [])
+                    if len(acc) < len(cs):
+                        acc += [mp.mpf(0)] * (len(cs) - len(acc))
+                    for m, c in enumerate(cs):
+                        acc[m] += c
         return total
 
     @staticmethod

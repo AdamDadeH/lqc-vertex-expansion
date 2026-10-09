@@ -1,37 +1,37 @@
 # lqc-vertex-expansion
 
 Python port of the 2009–2011 Mathematica notebooks on the vertex expansion of loop-quantum-cosmology
-amplitudes, the Bianchi I Θ-spectrum shooting, and toy renormalization of divergent series.  The
-original notebooks are archived unchanged in `archive/mathematica/`, with a readable Markdown digest
-of each in `archive/digests/`.  The port is checked against the numbers and expressions the notebooks
-had stored in their output cells (`tests/recorded.py`).  No Mathematica needed anywhere.
+amplitudes (Ashtekar–Campiglia–Henderson, "Casting LQC in the spin foam paradigm" and follow-ups), the
+Bianchi I Θ-spectrum shooting, and toy renormalization of divergent series; then the computations the
+notebooks stopped short of.  The original notebooks are archived unchanged (zipped) in `archive/`, with a
+readable Markdown digest of each in `archive/digests/`.  The port is checked against the numbers and
+expressions the notebooks had stored in their output cells (`tests/recorded.py`).  No Mathematica needed.
 
 ```
-uv sync                                        # .venv with sympy / numpy / scipy / mpmath / matplotlib / gmpy2
-uv run pytest                                  # ~10 s; every test compares against a value recorded in a notebook
-uv run examples/paramdata_partial_sums.py 18   # ParamData.nb figure (partial sums vs exact)
-uv run examples/bianchi1_spectrum_scan.py      # one line of the Bianchi I eigenvalue scan
-uv run examples/compute_orders.py sflqc_k 4 4 40   # expansion orders beyond the notebooks -> results/*.json
-uv run examples/beyond_notebooks.py            # convergence study -> results/beyond_notebooks.md + figures
+uv sync                                           # .venv with sympy / numpy / scipy / mpmath / matplotlib / gmpy2
+uv run pytest                                     # ~10 s; every test compares against a value recorded in a notebook
+uv run experiments/paramdata_partial_sums.py 18   # ParamData.nb figure (partial sums vs exact)
 ```
 
 ## Layout
 
 ```
-src/lqc/vertex.py     vertex expansion: history combinatorics, exact divided differences, the three models
-src/lqc/sflqc.py      exact sLQC amplitudes and matrix elements (a[n](k) polynomials, generating functions)
-src/lqc/timeless.py   group-averaged form with the p-integral by residues; regulated Bianchi I vacuum expansion
-src/lqc/bianchi1.py   Bianchi I Θ recurrence shooting, large-volume asymptotics
-src/lqc/renorm.py     toy renormalization flow, Catalan-type closed forms, Gaussian Borel-sum checks
-tests/                one test per recorded notebook value; tests/recorded.py holds the recorded values
-examples/             figure scripts and the beyond-the-notebooks computation
-results/              exact expansion terms (JSON) and the convergence study
-archive/              the notebooks, their digests, and the standalone digest tool (nbdigest.py)
+src/lqc/vertex.py        vertex expansion: history combinatorics, exact divided differences, the three models
+src/lqc/sflqc.py         exact sLQC amplitudes and matrix elements (a[n](k) polynomials, generating functions)
+src/lqc/timeless.py      group-averaged form with the p-integral by residues; regulated Bianchi I vacuum expansion
+src/lqc/bianchi1.py      Bianchi I Θ recurrence shooting, large-volume asymptotics
+src/lqc/renorm.py        toy renormalization flow, Catalan-type closed forms, Gaussian Borel-sum checks
+src/lqc/renormalized.py  decimation (renormalized) vertex expansion with a high-precision residue engine
+tests/                   one test per recorded notebook value; tests/recorded.py holds the recorded values
+experiments/             scripts that compute and write the reports in docs/
+docs/                    the reports: port verification, convergence to order 40, renormalization levels, Bianchi I scan
+results/                 exact expansion terms (JSON) behind the reports
+archive/                 the notebooks (zipped), their Markdown digests, and the standalone digest tool
 ```
 
 ## Notebook → code map
 
-| Notebook(s) (archive/mathematica) | What it computes | Entry points |
+| Notebook(s) (archive/mathematica-notebooks.zip) | What it computes | Entry points |
 |---|---|---|
 | `SFLQC/AutoAmplitude.nb`, `4to4expansion.nb`, `20to36.nb` | vertex expansion of the sLQC amplitude, volumes in steps of 4 | `vertex.sflqc_k_model()` |
 | `SFLQC/ExactAmpFixedPhi2.nb`, `TestingExactFRW.nb` | exact amplitude via a[n](k) polynomials and ∫dk, or via the generating function FId | `sflqc.a_poly`, `sflqc.exact_amplitude_k`, `sflqc.aexact_sym`, `sflqc.aexact_num` |
@@ -64,46 +64,23 @@ numerically on arrays, `to_json/from_json` store the exact terms.
 | 4→4 order 30 | 1.6·10⁸ | — | 12 s |
 | 4→4 order 34 | 2.3·10⁹ | — | 62 s |
 
-## What was verified against the notebooks
+## Reports (docs/)
 
-Every item is a test in `tests/`.  "Recorded" means read out of an Output cell of the original notebook.
+* [01 Port verification](docs/01-port-verification.md): everything reproduced from the notebooks' stored outputs,
+  and the inconsistencies found in the notebooks (an off-by-one table index, a stale stored output, a cell that
+  had been re-evaluated 17 times, a stored order-20 term that is not the order-20 term).
+* [02 Convergence of the vertex expansion](docs/02-convergence-of-the-vertex-expansion.md): exact terms to
+  order 40.  The series converges to the exact amplitude, but only as a power law (error ~ M^−0.6 at x = 0.5),
+  because the even powers of x are exact at finite order while the odd powers are the expansion of the
+  non-local √Θ and converge like M^−0.6.
+* [03 Renormalized expansion](docs/03-renormalized-expansion.md): the notebooks' renormalization flow is
+  real-space decimation of the resolvent; applied to the real Θ it accelerates the convergence dramatically
+  (levels 1–4), though it stays power-law.
+* [04 Bianchi I spectrum scan](docs/04-bianchi1-spectrum-scan.md): the shooting recurrence behind the
+  hand-written `Spect` log, reproduced.
 
-* **4→4 expansion** (`4to4expansion.nb`): stored a0, a2, …, a18 reproduced exactly (a20: see caveats).
-* **20→36 expansion** (`20to36.nb`): stored a4 … a16 reproduced exactly.
-* **ParamData.nb**: the table of A_0 … A_18 at x = 4.1 to 1e-9; the small symbolic outputs of
-  `ParamAuto.nb` (ManyAmp[1,1,2], ManyAmp[2,1,1], ManyAmp[2,1,3], the Changes/Paths lists).
-* **Residue method** (`GAvgByResidue.nb`): AmpLarge0 reproduced; residue and divided-difference forms agree.
-* **Exact amplitude**: a[6], a[10], a[18]; the a361 table of `ExactAmpFixedPhi2.nb`; Aexact[1,1] of
-  `TestingExactFRW.nb`; Sqth[1,1] = 1.2604977525677343; −2 Theta[5,6]/((5+6)√30) = 1; Diag[4] = −ψ⁽⁴⁾(½)/(2π⁵).
-* **Bianchi I vacuum**: ManyAmp[14,4,4] = −18.55597294432733 (`Bianchi1auto327.nb`) and the 4→20 amplitude
-  of `Bianchi1autoamp.nb`.
-* **Asymp.nb**: all four large-volume series, symbolically.
-* **Spectrum scan**: p1=50, p2=100: damped at e=−5001, divergent at e=−5005, as in the `Spect` log
-  ("seems constant" at −5001.4; the Python envelope ratio crosses 1 between −5001 and −5001.4).
-* **Renormalization toys**: 2/π at θ=π/4; the flowed first term converges to 2/π; Ap0, Ap[1], Aapprox,
-  abar/bbar of `VacExp328.nb`; the Gaussian integral, its Borel form and all 61 stored terms/partial sums.
-
-## Caveats and things found in the notebooks
-
-* **`ExactAmpFixedPhi2.nb` indexing.**  Its table `b = Join[Table[a[n],{n,2,5}], …]` makes `b[[n/2]]`
-  equal to `a[n/2+1]`, whereas `AutoAmplitude.nb`/`20to36.nb` use `a[n/2]`.  The stored a361 numbers
-  reproduce only with the `a[n/2+1]` indexing (`index_shift=1`).  Whether that was intended is not
-  decidable from the notebooks.
-* **`testingtesting.nb`** shows `OffD = a²/b`, `Diag = b − 2a²/b` as input but its stored ManyAmp[8,4,4]
-  corresponds to `OffD = a`, `Diag = b`.  The test checks the latter.
-* **`VacExp328.nb`** records `Aapprox[0,0,b,a] = 0.1643743908…` after `a=a1; b=b1;`.  One flow step gives
-  2.3e−5.  The cell reassigns a, b globally, so each re-evaluation applies another step; the recorded number
-  is exactly the first term after 17 steps.  The exact sum is invariant under the flow (a² − 4b² is
-  conserved), which is why the first term converges to it.
-* **`4to4expansion.nb` a20** differs from the order-20 term computed here, while orders 0–18 match exactly;
-  it is the only stored order whose rational coefficients have denominators that are not powers of two.
-  See `results/beyond_notebooks.md` for the resolution using higher orders.
-* **`RenormSimple.nb` flow in floating point**: x_n leaves [−2,2] and grows doubly-exponentially; the
-  Python flow freezes x once |x| > 1e100.
-* `Changes`/`Paths`/`IntegerPartitions` are generated in Mathematica's order so recorded lists compare verbatim.
-
-## Beyond the notebooks
-
-`examples/compute_orders.py` computes exact expansion terms to any order the machine allows and
-`examples/beyond_notebooks.py` compares the partial sums with the exact amplitudes; the write-up with
-figures is `results/beyond_notebooks.md`.
+```
+uv run experiments/compute_orders.py sflqc_k 4 4 40          # exact terms -> results/
+uv run experiments/convergence_study.py && uv run experiments/taylor_structure.py     # -> docs/02
+uv run experiments/renormalization_levels.py && uv run experiments/renormalization_report.py   # -> docs/03
+```
