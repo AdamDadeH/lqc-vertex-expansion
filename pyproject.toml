@@ -1,0 +1,26 @@
+[project]
+name = "lqc-vertex-expansion"
+version = "0.1.0"
+description = "Python port of 2009-2011 Mathematica notebooks: vertex expansion of LQC amplitudes, Bianchi I spectrum shooting, and toy renormalization of divergent series"
+requires-python = ">=3.11"
+dependencies = [
+    "sympy>=1.13",
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "mpmath>=1.3",
+    "matplotlib>=3.8",
+    "gmpy2>=2.3.2",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["uv_build>=0.8.0,<0.9.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.uv.build-backend]
+module-name = "lqc"

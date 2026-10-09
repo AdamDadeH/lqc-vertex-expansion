@@ -1,0 +1,98 @@
+Spectrum of Bianchi I theta operator.
+
+m1=10
+m2=10
+
+T=100000
+e=0	Damped Oscillations
+e=-5	Damped Oscillations
+e=-10   Damped Osc.
+e=-15	Damped Osc.
+e=-20	Damped Osc.
+e=-40	Damped Osc.
+T=200000
+e=-60	Damped Osc.
+e=-65	Damped Osc.
+e=-67.5 Damped Osc.
+e=-68	Weakly Dampled Osc.
+e=-68.5	Weakly Divergent Oscillations
+e=-68.75 Weakly Div. and Osc.
+T=500000
+e=-70	Osc. Weakly Divergent
+e=-80	Osc. Divergent
+
+m1=20
+m2=20
+
+T=100000
+e=-80	Crazy Oscillatory, Damped
+e=-100	Oscillatory
+e=-200	Oscillatory
+e=-250	Damped Osc.
+e=-260	Damped Osc.
+e=-4*68=272	Osc. Divergent
+e=-300	Osc. Divergent
+
+m1=50
+m2=50
+
+T=50000
+e=-2/3*25^2  Damped Oscillations
+e=-1667.67	Mildy Damped Osc.
+e=-1671.67	Divergent
+
+m1=50
+m2=100
+
+T=50000
+
+e=-5000 = -2/3(50^2+100^2-50*100) Mildy/Non Damped
+e=-5001	Mildly Damped
+e=-5001.2 Slowly damped
+e=-5001.4 Seems constant
+e=-5001.5 Slow Divergence
+e=-5001.7 Slow Divergence
+e=-5002	Slowly Growing
+e=-5005 Divergent
+
+m1=10
+m2=0
+
+T=100000
+e=0 Damped Regular Osc.
+e=-50 Initially complicated Osc.. settling down?
+e=-100	Divergent!
+e=-85 Divergent but less so
+e=-75 Growing Oscillations
+e=-66.6 Damped Osc. 
+e=-69 Divergent
+
+m1=100
+m2=0
+as seen up to T=300000
+e=-6500 Damped Oscillations
+e=-6666 Damped Oscillations - No large scale osc. - only small scale
+e=-6667 Damped Osc.
+e=-6668	Undamped - very slow oscillations with fast on top.
+e=-6670 More slowly divergent
+e=-6675 Still Divergent
+e=-6700	Osc. Divergent
+e=-6750	Osc. Divergent
+e=-7500 Divergent
+e=-8500 Divergent
+e=-9000 Divergent
+e=-9500 Divergent
+e=-10000  Hugely Divergent
+
+m1=1000
+m2=0
+
+e=5	Damped crazy oscillations
+e=-100	Damped oscillations
+e=-1000	Damped oscillations
+e=-1500	Damped Oscillations
+e=-10000 Damped Oscillations - really interesting - super fast osc. on top
+	of super slow.
+e=-50000  Damped Oscillations - The two rates or getting closer together
+e=-200000
+
